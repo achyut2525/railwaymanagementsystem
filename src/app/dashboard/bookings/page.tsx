@@ -33,6 +33,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function BookingsPage() {
   const { toast } = useToast();
@@ -208,17 +209,20 @@ export default function BookingsPage() {
                                 
                                 <div className="flex flex-col items-center py-4 gap-6">
                                   <div className="p-6 bg-white rounded-3xl shadow-2xl border-2 border-dashed border-primary/20">
-                                    <div className="w-48 h-48 grid grid-cols-10 grid-rows-10 gap-0.5">
-                                      {Array.from({ length: 100 }).map((_, i) => (
-                                        <div 
-                                          key={i} 
-                                          className={cn(
-                                            "rounded-sm",
-                                            Math.random() > 0.4 ? "bg-black" : "bg-transparent"
-                                          )} 
-                                        />
-                                      ))}
-                                    </div>
+                                    <QRCodeSVG 
+                                      value={JSON.stringify({
+                                        pnr: booking.pnr,
+                                        train: booking.train,
+                                        passenger: booking.passenger,
+                                        from: booking.from,
+                                        to: booking.to,
+                                        date: booking.date,
+                                        seat: booking.seat
+                                      })} 
+                                      size={192}
+                                      level="H"
+                                      includeMargin={false}
+                                    />
                                   </div>
                                   
                                   <div className="w-full space-y-4">
