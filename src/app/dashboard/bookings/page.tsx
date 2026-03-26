@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -32,10 +32,22 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function BookingsPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("upcoming");
+  const [mounted, setMounted] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState({ date: "2024-06-15", time: "06:00 AM" });
+
+  useEffect(() => {
+    setMounted(true);
+    const now = new Date();
+    setCurrentDateTime({
+      date: now.toLocaleDateString('en-CA'), // YYYY-MM-DD
+      time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+    });
+  }, []);
 
   const bookings = [
     { 
@@ -45,8 +57,8 @@ export default function BookingsPage() {
       number: "12860",
       from: "Mumbai CST", 
       to: "Howrah JN", 
-      date: "2024-06-15", 
-      time: "06:00 AM",
+      date: mounted ? currentDateTime.date : "2024-06-15", 
+      time: mounted ? currentDateTime.time : "06:00 AM",
       seat: "Coach S4 - Seat 42",
       passenger: "John Doe",
       amount: "₹1,245.00",
