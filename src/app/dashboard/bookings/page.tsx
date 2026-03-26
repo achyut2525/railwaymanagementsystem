@@ -35,9 +35,11 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
+import { useUser } from "@/firebase";
 
 export default function BookingsPage() {
   const { toast } = useToast();
+  const { user } = useUser();
   const [activeTab, setActiveTab] = useState("upcoming");
   const [mounted, setMounted] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState({ date: "2024-06-15", time: "06:00 AM" });
@@ -51,6 +53,8 @@ export default function BookingsPage() {
     });
   }, []);
 
+  const passengerName = user?.displayName || "John Doe";
+
   const bookings = [
     { 
       id: "BK-001", 
@@ -62,7 +66,7 @@ export default function BookingsPage() {
       date: mounted ? currentDateTime.date : "2024-06-15", 
       time: mounted ? currentDateTime.time : "06:00 AM",
       seat: "Coach S4 - Seat 42",
-      passenger: "John Doe",
+      passenger: passengerName,
       amount: "₹1,245.00",
       status: "Confirmed",
       type: "upcoming",
@@ -80,7 +84,7 @@ export default function BookingsPage() {
       date: "2024-05-10", 
       time: "07:15 AM",
       seat: "Coach C1 - Seat 04",
-      passenger: "John Doe",
+      passenger: passengerName,
       amount: "₹450.00",
       status: "Completed",
       type: "past"
@@ -95,7 +99,7 @@ export default function BookingsPage() {
       date: "2024-04-20", 
       time: "03:45 PM",
       seat: "Coach E2 - Seat 22",
-      passenger: "John Doe",
+      passenger: passengerName,
       amount: "₹820.00",
       status: "Cancelled",
       type: "past"
