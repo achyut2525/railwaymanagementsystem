@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -342,10 +341,11 @@ function StationAutocomplete({ label, value, onChange, stations, placeholder, ic
 
   const filteredStations = useMemo(() => {
     if (!value || value.length < 1) return [];
-    const search = value.toLowerCase();
+    // Escape special characters for regex safety
+    const search = value.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return stations.filter(s => 
-      s.name.toLowerCase().includes(search) || 
-      s.code.toLowerCase().includes(search)
+      s.name.toLowerCase().includes(value.toLowerCase()) || 
+      s.code.toLowerCase().includes(value.toLowerCase())
     ).slice(0, 8);
   }, [value, stations]);
 
@@ -444,7 +444,9 @@ function StationAutocomplete({ label, value, onChange, stations, placeholder, ic
 // Highlight matching text component
 function HighlightedText({ text, highlight }: { text: string; highlight: string }) {
   if (!highlight.trim()) return <>{text}</>;
-  const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+  // Escape special characters for regex safety
+  const safeHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = text.split(new RegExp(`(${safeHighlight})`, "gi"));
   return (
     <>
       {parts.map((part, i) => 
