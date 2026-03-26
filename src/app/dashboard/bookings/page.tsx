@@ -171,7 +171,7 @@ export default function BookingsPage() {
                               </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden rounded-3xl border-none">
-                              <div className="bg-primary p-8 text-primary-foreground relative overflow-hidden">
+                              <DialogHeader className="bg-primary p-8 text-primary-foreground relative overflow-hidden">
                                 <Train className="absolute -top-10 -right-10 h-48 w-48 opacity-10 rotate-12" />
                                 <div className="relative z-10 flex items-center justify-between mb-8">
                                   <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export default function BookingsPage() {
                                     </div>
                                     <div>
                                       <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">TrackBooker Rail</p>
-                                      <p className="text-xl font-black">Digital E-Ticket</p>
+                                      <DialogTitle className="text-xl font-black">Digital E-Ticket</DialogTitle>
                                     </div>
                                   </div>
                                   <Badge className="bg-white/20 text-white border-none text-[8px] uppercase tracking-widest font-black">Official</Badge>
@@ -195,7 +195,10 @@ export default function BookingsPage() {
                                     <p className="text-lg font-bold">{booking.passenger}</p>
                                   </div>
                                 </div>
-                              </div>
+                                <DialogDescription className="sr-only">
+                                  Details of your confirmed booking for PNR {booking.pnr}.
+                                </DialogDescription>
+                              </DialogHeader>
                               
                               <div className="p-8 bg-background relative">
                                 <div className="absolute -top-4 left-0 w-full flex justify-between px-8">
@@ -233,11 +236,11 @@ export default function BookingsPage() {
                                 </div>
                               </div>
 
-                              <div className="p-6 bg-secondary/30 flex gap-3 border-t">
+                              <DialogFooter className="p-6 bg-secondary/30 flex gap-3 border-t sm:justify-start">
                                 <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold"><Download className="mr-2 h-4 w-4" /> PDF</Button>
                                 <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
                                 <Button className="flex-1 rounded-xl h-12 font-bold shadow-lg shadow-primary/20"><Printer className="mr-2 h-4 w-4" /> Print</Button>
-                              </div>
+                              </DialogFooter>
                             </DialogContent>
                           </Dialog>
                           <Button 
