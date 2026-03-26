@@ -19,7 +19,8 @@ import {
   Info,
   CheckCircle2,
   QrCode,
-  Share2
+  Share2,
+  User
 } from "lucide-react";
 import { 
   Dialog, 
@@ -155,7 +156,8 @@ export default function BookingsPage() {
                         </Badge>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <JourneyPoint label="Passenger" value={booking.passenger} icon={User} />
                         <JourneyPoint label="Route" value={`${booking.from} → ${booking.to}`} icon={MapPin} />
                         <JourneyPoint label="Schedule" value={`${booking.date} @ ${booking.time}`} icon={Calendar} />
                         <JourneyPoint label="Assignment" value={booking.seat} icon={Ticket} />
@@ -197,7 +199,7 @@ export default function BookingsPage() {
                                   </div>
                                 </div>
                                 <DialogDescription className="sr-only">
-                                  Details of your confirmed booking for PNR {booking.pnr}.
+                                  Details of your confirmed booking for PNR {booking.pnr} with passenger {booking.passenger}.
                                 </DialogDescription>
                               </DialogHeader>
                               
@@ -234,7 +236,7 @@ export default function BookingsPage() {
                                     </div>
                                     <div className="p-4 bg-muted/50 rounded-2xl flex items-center gap-3">
                                       <Info className="h-4 w-4 text-primary shrink-0" />
-                                      <p className="text-[10px] font-medium text-muted-foreground">Please carry a valid ID proof along with this digital ticket for verification by TTE.</p>
+                                      <p className="text-[10px] font-medium text-muted-foreground">Please carry a valid ID proof for {booking.passenger} along with this digital ticket.</p>
                                     </div>
                                   </div>
                                 </div>
