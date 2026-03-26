@@ -1,0 +1,652 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user account in the system, storing essential profile information and their assigned role. Authentication details like passwords are managed externally.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user, used for login.",
+          "format": "email"
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user, determining their access level in the system. (Possible values: 'passenger', 'admin')"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "role",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Station": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Station",
+      "type": "object",
+      "description": "Represents a railway station, including its identification details and geographical location.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Station entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name of the railway station (e.g., 'New Delhi Railway Station')."
+        },
+        "code": {
+          "type": "string",
+          "description": "The unique code or abbreviation for the station (e.g., 'NDLS')."
+        },
+        "city": {
+          "type": "string",
+          "description": "The city where the station is located."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state or province where the station is located."
+        },
+        "country": {
+          "type": "string",
+          "description": "The country where the station is located."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Geographical latitude of the station."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Geographical longitude of the station."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the station record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the station record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "code",
+        "city",
+        "country",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Route": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Route",
+      "type": "object",
+      "description": "Defines a specific path or sequence of stations a train might travel, from an origin to a destination, potentially with intermediate stops.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Route entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "A descriptive name for the route (e.g., 'Delhi to Mumbai Express Route')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the route."
+        },
+        "originStationId": {
+          "type": "string",
+          "description": "Reference to the starting Station of this route. (Relationship: Station 1:N Route)"
+        },
+        "destinationStationId": {
+          "type": "string",
+          "description": "Reference to the final Station of this route. (Relationship: Station 1:N Route)"
+        },
+        "intermediateStationIds": {
+          "type": "array",
+          "description": "An ordered list of references to intermediate Stations along this route. (Relationship: Station N:N Route)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "distance": {
+          "type": "number",
+          "description": "The total distance of the route in kilometers or miles."
+        },
+        "estimatedDuration": {
+          "type": "string",
+          "description": "The estimated total duration of the route (e.g., '10h 30m')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the route record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the route record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "originStationId",
+        "destinationStationId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Train": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Train",
+      "type": "object",
+      "description": "Represents a specific train, including its identifying number, name, capacity, and operational status.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Train entity."
+        },
+        "trainNumber": {
+          "type": "string",
+          "description": "The unique number assigned to the train (e.g., '12301')."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the train (e.g., 'Howrah Rajdhani Express')."
+        },
+        "capacity": {
+          "type": "number",
+          "description": "The total seating capacity of the train."
+        },
+        "operator": {
+          "type": "string",
+          "description": "The operating railway company or authority (e.g., 'Indian Railways')."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the train is currently active and in service."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the train record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the train record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "trainNumber",
+        "name",
+        "capacity",
+        "active",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Schedule": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Schedule",
+      "type": "object",
+      "description": "Defines a specific instance of a train running on a route at a particular time, including departure/arrival times, operating days, and real-time seat availability.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Schedule entity."
+        },
+        "trainId": {
+          "type": "string",
+          "description": "Reference to the Train associated with this schedule. (Relationship: Train 1:N Schedule)"
+        },
+        "routeId": {
+          "type": "string",
+          "description": "Reference to the Route associated with this schedule. (Relationship: Route 1:N Schedule)"
+        },
+        "departureStationId": {
+          "type": "string",
+          "description": "Reference to the specific departure Station for this schedule. (Relationship: Station 1:N Schedule)"
+        },
+        "arrivalStationId": {
+          "type": "string",
+          "description": "Reference to the specific arrival Station for this schedule. (Relationship: Station 1:N Schedule)"
+        },
+        "departureTime": {
+          "type": "string",
+          "description": "The scheduled departure date and time for this specific journey.",
+          "format": "date-time"
+        },
+        "arrivalTime": {
+          "type": "string",
+          "description": "The scheduled arrival date and time for this specific journey.",
+          "format": "date-time"
+        },
+        "operatingDays": {
+          "type": "array",
+          "description": "An array of days of the week on which this schedule operates (e.g., ['MONDAY', 'WEDNESDAY', 'FRIDAY']).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "availableSeats": {
+          "type": "number",
+          "description": "The current number of seats available for booking on this schedule."
+        },
+        "basePrice": {
+          "type": "number",
+          "description": "The base fare for a ticket on this schedule."
+        },
+        "status": {
+          "type": "string",
+          "description": "The operational status of the schedule (e.g., 'Active', 'Cancelled', 'Delayed')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the schedule record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the schedule record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "trainId",
+        "routeId",
+        "departureStationId",
+        "arrivalStationId",
+        "departureTime",
+        "arrivalTime",
+        "operatingDays",
+        "availableSeats",
+        "basePrice",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Booking": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Booking",
+      "type": "object",
+      "description": "Represents a single ticket booking made by a user for a specific train schedule, identified by a PNR.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Booking entity, often referred to as PNR (Passenger Name Record)."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who made this booking. (Relationship: UserProfile 1:N Booking)"
+        },
+        "scheduleId": {
+          "type": "string",
+          "description": "Reference to the Schedule for which this booking was made. (Relationship: Schedule 1:N Booking)"
+        },
+        "bookingDate": {
+          "type": "string",
+          "description": "The date and time when the booking was placed.",
+          "format": "date-time"
+        },
+        "departureDate": {
+          "type": "string",
+          "description": "The actual date of travel for this booking.",
+          "format": "date"
+        },
+        "departureStationId": {
+          "type": "string",
+          "description": "Reference to the specific departure Station for this booking. (Relationship: Station 1:N Booking)"
+        },
+        "arrivalStationId": {
+          "type": "string",
+          "description": "Reference to the specific arrival Station for this booking. (Relationship: Station 1:N Booking)"
+        },
+        "totalFare": {
+          "type": "number",
+          "description": "The total fare paid for this booking, including all passengers."
+        },
+        "paymentId": {
+          "type": "string",
+          "description": "Reference to the Payment associated with this booking. (Relationship: Booking 1:1 Payment)"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the booking (e.g., 'Confirmed', 'Pending', 'Cancelled', 'Refunded')."
+        },
+        "qrCodeData": {
+          "type": "string",
+          "description": "Data string used to generate the QR code for the ticket, often containing the booking ID and other essential details."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the booking record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the booking record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "scheduleId",
+        "bookingDate",
+        "departureDate",
+        "departureStationId",
+        "arrivalStationId",
+        "totalFare",
+        "paymentId",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PassengerDetail": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PassengerDetail",
+      "type": "object",
+      "description": "Stores individual passenger details associated with a specific booking, avoiding nested structures within the Booking entity.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PassengerDetail entity."
+        },
+        "bookingId": {
+          "type": "string",
+          "description": "Reference to the Booking this passenger detail belongs to. (Relationship: Booking 1:N PassengerDetail)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name of the passenger."
+        },
+        "age": {
+          "type": "number",
+          "description": "The age of the passenger."
+        },
+        "gender": {
+          "type": "string",
+          "description": "The gender of the passenger (e.g., 'Male', 'Female', 'Other')."
+        },
+        "seatNumber": {
+          "type": "string",
+          "description": "The assigned seat number for this passenger on the booked train (e.g., 'A12')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the passenger detail record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the passenger detail record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "bookingId",
+        "name",
+        "age",
+        "gender",
+        "seatNumber",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Payment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payment",
+      "type": "object",
+      "description": "Records the details of a payment transaction associated with a booking, including status and method.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Payment entity."
+        },
+        "bookingId": {
+          "type": "string",
+          "description": "Reference to the Booking this payment is for. (Relationship: Booking 1:1 Payment)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The total amount of the payment."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency in which the payment was made (e.g., 'INR', 'USD')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the payment (e.g., 'Success', 'Pending', 'Failed', 'Refunded')."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The method used for payment (e.g., 'Credit Card', 'UPI', 'Net Banking')."
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "The unique transaction identifier provided by the payment gateway."
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "The date and time when the payment was processed.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the payment record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the payment record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "bookingId",
+        "amount",
+        "currency",
+        "status",
+        "paymentMethod",
+        "transactionId",
+        "paymentDate",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profiles, including their name, email, and assigned role ('passenger' or 'admin'). The 'userId' in the path corresponds to the Firebase Authentication UID. Includes the 'role' field for authorization independence, enabling direct DBAC lookup via 'get()'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stations/{stationId}",
+        "definition": {
+          "entityName": "Station",
+          "schema": {
+            "$ref": "#/backend/entities/Station"
+          },
+          "description": "Contains details of all railway stations. Publicly readable by all authenticated users, writable only by 'admin' users. Represents global, public data with homogeneous security.",
+          "params": [
+            {
+              "name": "stationId",
+              "description": "The unique identifier for a specific railway station."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/routes/{routeId}",
+        "definition": {
+          "entityName": "Route",
+          "schema": {
+            "$ref": "#/backend/entities/Route"
+          },
+          "description": "Defines railway routes between stations. Publicly readable by all authenticated users, writable only by 'admin' users. Represents global, public data with homogeneous security.",
+          "params": [
+            {
+              "name": "routeId",
+              "description": "The unique identifier for a specific railway route."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/trains/{trainId}",
+        "definition": {
+          "entityName": "Train",
+          "schema": {
+            "$ref": "#/backend/entities/Train"
+          },
+          "description": "Holds information about individual trains. Publicly readable by all authenticated users, writable only by 'admin' users. Represents global, public data with homogeneous security.",
+          "params": [
+            {
+              "name": "trainId",
+              "description": "The unique identifier for a specific train."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schedules/{scheduleId}",
+        "definition": {
+          "entityName": "Schedule",
+          "schema": {
+            "$ref": "#/backend/entities/Schedule"
+          },
+          "description": "Defines specific train schedules and their availability. Publicly readable by all authenticated users, writable only by 'admin' users. Represents global, public data with homogeneous security.",
+          "params": [
+            {
+              "name": "scheduleId",
+              "description": "The unique identifier for a specific train schedule."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/bookings/{bookingId}",
+        "definition": {
+          "entityName": "Booking",
+          "schema": {
+            "$ref": "#/backend/entities/Booking"
+          },
+          "description": "Stores individual ticket bookings. Nested under `/users/{userId}` to enforce path-based ownership, where 'userId' must match the authenticated user. This ensures authorization independence for user-owned bookings.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the user who made the booking."
+            },
+            {
+              "name": "bookingId",
+              "description": "The unique identifier (PNR) for a specific booking."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/bookings/{bookingId}/passengerDetails/{passengerDetailId}",
+        "definition": {
+          "entityName": "PassengerDetail",
+          "schema": {
+            "$ref": "#/backend/entities/PassengerDetail"
+          },
+          "description": "Records details for each passenger within a specific booking. Nested hierarchically to maintain explicit ownership linked to the parent booking and user. Authorization is inherited from the parent booking's path.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the user who owns the booking."
+            },
+            {
+              "name": "bookingId",
+              "description": "The unique identifier for the parent booking."
+            },
+            {
+              "name": "passengerDetailId",
+              "description": "The unique identifier for a specific passenger detail record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/bookings/{bookingId}/payments/{paymentId}",
+        "definition": {
+          "entityName": "Payment",
+          "schema": {
+            "$ref": "#/backend/entities/Payment"
+          },
+          "description": "Details of payment transactions associated with a specific booking. Nested hierarchically to maintain explicit ownership linked to the parent booking and user. Authorization is inherited from the parent booking's path.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the user who owns the booking."
+            },
+            {
+              "name": "bookingId",
+              "description": "The unique identifier for the parent booking."
+            },
+            {
+              "name": "paymentId",
+              "description": "The unique identifier for a specific payment transaction."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure for the TrackBooker Railway Management System emphasizes strong authorization independence, clear structural segregation, and predictable data access patterns.User authentication is managed via Firebase Authentication, with user roles ('passenger' or 'admin') stored directly within each user's profile document in the `/users/{userId}` collection. This DBAC (Database Access Control) approach allows Firestore Security Rules to retrieve the user's role via a single self-referential `get()` call (e.g., `get(/users/$(request.auth.uid))`) for role-based authorization, which is acceptable and does not violate Authorization Independence for other data entities.Authorization Independence for hierarchical data is achieved through path-based ownership and denormalization. For instance, `Booking` entities are nested under `/users/{userId}/bookings/{bookingId}`, and subsequent `PassengerDetail` and `Payment` entities are further nested under the respective booking (e.g., `/users/{userId}/bookings/{bookingId}/passengerDetails/{passengerDetailId}`). This structure ensures that the `userId` and `bookingId` are explicit in the path. Security rules can directly compare `request.auth.uid` with the `{userId}` wildcard in the path, eliminating the need for expensive and complex `get()` calls to parent documents to determine ownership or permissions for these related subcollections. This design supports atomic operations and simplifies security rule logic significantly, as permissions are self-contained within the document's path and its immediate data.The 'Queries Are Not Filters' (QAP) principle is addressed through structural segregation and explicit ownership. Globally accessible administrative data like `Stations`, `Routes`, `Trains`, and `Schedules` reside in top-level collections (`/stations`, `/routes`, etc.). These collections have a homogeneous security posture: all authenticated users can read them, while only 'admin' users can create, update, or delete them. This allows `list` queries on these collections to return all visible documents without requiring client-side filtering, as all documents in these collections share the same read access. For user-specific data, nesting under `/users/{userId}` ensures that `list` queries performed by a user on their own path (e.g., `/users/{request.auth.uid}/bookings`) will inherently only retrieve data owned by that user, making the queries naturally secure and efficient without relying on rule-based filtering. The `status` field is explicitly used in `Schedule`, `Booking`, and `Payment` entities for clear state modeling. Consistent naming conventions, such as `createdAt`, `updatedAt`, and descriptive wildcards like `{userId}` and `{bookingId}`, enhance data clarity and predictability throughout the structure."
+  }
+}

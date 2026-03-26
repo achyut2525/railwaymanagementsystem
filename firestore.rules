@@ -1,0 +1,153 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * RAILWAY MANAGEMENT SYSTEM - SECURITY RULES
+     * 
+     * Philosophy: Prototyping Mode.
+     * These rules prioritize strict authorization (who can access what) while remaining flexible 
+     * on the specific data schema to allow for rapid development iterations.
+     * 
+     * Core Philosophy:
+     * 1. RBAC (Role-Based Access Control): Users are either 'passenger' or 'admin'. 
+     *    Roles are stored in the user's profile document.
+     * 2. Path-Based Ownership: User-specific data (Bookings, Payments) is nested under 
+     *    /users/{userId} to ensure natural data isolation and simplified ownership checks.
+     * 3. Admin-Managed Global Data: Stations, Routes, Trains, and Schedules are publicly 
+     *    viewable by authenticated users but strictly writable only by administrators.
+     * 4. Relational Integrity: On creation, we enforce that document internal IDs and 
+     *    owner references match the URL path parameters.
+     * 
+     * Structural Segregation:
+     * - Public/Global Data: /stations, /routes, /trains, /schedules
+     * - Private/User Data: /users/{userId} and its subcollections (bookings, payments)
+     */
+
+    // --- HELPER FUNCTIONS ---
+
+    /** @description Checks if the request is from a logged-in user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Retrieves the data for the currently authenticated user. */
+    function getUserData() {
+      // Ensure the user document exists before trying to access its data.
+      // This implicitly handles cases where a user might be authenticated but their profile document doesn't exist yet.
+      // However, for rules, the 'get' function returns null if the document doesn't exist, which is handled by subsequent checks.
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    /** @description Checks if the authenticated user has the 'admin' role. */
+    function isAdmin() {
+      return isSignedIn() && getUserData().role == 'admin';
+    }
+
+    /** @description Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description User profile management. Allows self-creation and admin management.
+     * @path /users/{userId}
+     * @allow (create) if auth.uid matches userId.
+     * @deny (list) for non-admin users to prevent user enumeration.
+     * @principle Ownership for users, roles for admin management.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if (isOwner(userId) || isAdmin()) && resource != null;
+      allow delete: if isAdmin() && resource != null;
+
+      /**
+       * @description Passenger ticket bookings. Nested under user for strict isolation.
+       * @path /users/{userId}/bookings/{bookingId}
+       * @allow (list) if the user is the owner of the path.
+       * @deny (create) if the internal userId field doesn't match the path.
+       * @principle Path-based ownership and relational integrity.
+       */
+      match /bookings/{bookingId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && request.resource.data.userId == userId && request.resource.data.id == bookingId;
+        allow update: if (isOwner(userId) || isAdmin()) && resource != null;
+        allow delete: if isAdmin() && resource != null;
+
+        /**
+         * @description Details for individual passengers on a booking.
+         * @path /users/{userId}/bookings/{bookingId}/passengerDetails/{detailId}
+         * @principle Hierarchical inheritance of ownership.
+         */
+        match /passengerDetails/{detailId} {
+          allow get, list: if isOwner(userId) || isAdmin();
+          allow create: if isOwner(userId) && request.resource.data.bookingId == bookingId;
+          allow update: if (isOwner(userId) || isAdmin()) && resource != null;
+          allow delete: if isAdmin() && resource != null;
+        }
+
+        /**
+         * @description Payment records for a specific booking.
+         * @path /users/{userId}/bookings/{bookingId}/payments/{paymentId}
+         * @principle Hierarchical inheritance of ownership.
+         */
+        match /payments/{paymentId} {
+          allow get, list: if isOwner(userId) || isAdmin();
+          allow create: if isOwner(userId) && request.resource.data.bookingId == bookingId;
+          allow update: if (isOwner(userId) || isAdmin()) && resource != null;
+          allow delete: if isAdmin() && resource != null;
+        }
+      }
+    }
+
+    /**
+     * @description Railway stations. Publicly readable, admin writable.
+     * @path /stations/{stationId}
+     * @allow (list) for any signed-in user.
+     * @deny (write) for any user without the 'admin' role.
+     * @principle Role-based global data management.
+     */
+    match /stations/{stationId} {
+      allow get, list: if isSignedIn();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Railway routes. Publicly readable, admin writable.
+     * @path /routes/{routeId}
+     * @principle Role-based global data management.
+     */
+    match /routes/{routeId} {
+      allow get, list: if isSignedIn();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Train assets. Publicly readable, admin writable.
+     * @path /trains/{trainId}
+     * @principle Role-based global data management.
+     */
+    match /trains/{trainId} {
+      allow get, list: if isSignedIn();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Operational train schedules. Publicly readable, admin writable.
+     * @path /schedules/{scheduleId}
+     * @principle Role-based global data management.
+     */
+    match /schedules/{scheduleId} {
+      allow get, list: if isSignedIn();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && resource != null;
+    }
+  }
+}

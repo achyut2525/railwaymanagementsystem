@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-train",
+      "description": "Modern high-speed train on tracks",
+      "imageUrl": "https://picsum.photos/seed/railway-hero/1200/600",
+      "imageHint": "high-speed train"
+    },
+    {
+      "id": "train-cabin",
+      "description": "Clean and modern train interior",
+      "imageUrl": "https://picsum.photos/seed/train-cabin/800/600",
+      "imageHint": "train interior"
+    }
+  ]
+}
